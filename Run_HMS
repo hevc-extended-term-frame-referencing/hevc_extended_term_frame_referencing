@@ -1,0 +1,155 @@
+#!/bin/bash
+#clear
+fid="scene_level_sample_320240_1min"
+RankListFile=./OrderedFrames_1min.txt
+QP=24
+MaxCUSize=16
+MaxPartitionDepth=2
+Ref_active=8
+Ref_stitch=2
+FramesToBeEncoded=30000
+fsr=25
+mode=stitching
+path="./HMSResults/"
+
+for i in "$@"
+do
+case $i in
+    -vid=*|--vid=*)
+    fid="${i#*=}"
+    shift
+    ;;
+    -rlist=*|--rlist=*)
+    RankListFile="${i#*=}"
+    shift
+    ;;
+    -qp=*|--qp=*)
+    QP="${i#*=}"
+    shift
+    ;;
+    -mcu=*|--mcu=*)
+    MaxCUSize="${i#*=}"
+    shift
+    ;;
+    -mpd=*|--mpd=*)
+    MaxPartitionDepth="${i#*=}"
+    shift
+    ;;
+    -refa=*|--refa=*)
+    Ref_active="${i#*=}"
+    shift
+    ;;
+    -refs=*|--refs=*)
+    Ref_stitch="${i#*=}"
+    shift
+    ;;
+    -nf=*|--nf=*)
+    FramesToBeEncoded="${i#*=}"
+    shift
+    ;;
+    -mode=*|--mode=*)
+    mode="${i#*=}"
+    shift
+    ;;
+    -fsr=*|--fsr=*)
+    fsr="${i#*=}"
+    shift
+    ;;
+   -output_dir=*|--output_dir=*)
+    path="${i#*=}"
+    shift
+    ;;
+    *)
+          # unknown option
+    ;;
+esac
+done
+#### End Parsing Command Line Parameters
+
+
+if [ $mode != "stitching" ] && [ $mode != "Stitching" ] && [ $mode != "stitch" ] && [ $mode != "Stitch" ]
+then
+Ref_stitch=0;
+echo "================================================================================================"
+echo "With mode != stitching, number of stitching reference frames must be set to zero [--refs=0]"
+echo "================================================================================================"
+else
+mode="stitching"
+fi
+
+if [[ ! -e "$path" ]]
+then
+mkdir $path
+echo $path
+fi
+
+HMSResults=$path"/"$fid"_QP"$QP"_MCU"$MaxCUSize"_Depth"$MaxPartitionDepth"_RefA"$Ref_active"_RefS"$Ref_stitch"_fsr"$fsr"_"$mode".dat"
+
+InputYUV="../vid/"$fid".yuv"
+InputMP4="../vid/"$fid".mp4"
+
+
+rm $HMSResults
+echo "Input File (YUV) = "$InputYUV > $HMSResults
+echo "Input File (MP4) = "$InputMP4 >> $HMSResults
+echo "RankListFile = "$RankListFile >> $HMSResults
+echo "Ref_active = "$Ref_active >> $HMSResults
+echo "Ref_stitch = "$Ref_stitch >> $HMSResults
+echo "QP = "$QP >> $HMSResults
+echo "MaxCUSize = "$MaxCUSize >> $HMSResults
+echo "MaxPartitionDepth = "$MaxPartitionDepth >> $HMSResults
+echo "" >> $HMSResults
+
+rm -rf ./encoder_HMS_GOP.cfg
+python CreateHMGOPStruct.py --ranklist $RankListFile --ref_active $Ref_active --ref_stitch $Ref_stitch --mode $mode --fsr $fsr
+
+rm -rf "../vid/HMEncodedVideo.bin"
+rm -rf encoder.log
+
+if [ $mode = "stitching" ]
+then
+./HMS/bin/TAppEncoderStatic -c ./encoder_HMS.cfg -c ./encoder_HMS_GOP.cfg --InputFile=$InputYUV --QP=$QP --FramesToBeEncoded=$FramesToBeEncoded --MaxCUSize=$MaxCUSize --MaxPartitionDepth=$MaxPartitionDepth --QuadtreeTULog2MaxSize=4 --BitstreamFile="../vid/HMEncodedVideo.bin" |& tee -a encoder.log
+else
+./HM_Original/bin/TAppEncoderStatic -c ./encoder_HMS.cfg -c ./encoder_HMS_GOP.cfg --InputFile=$InputYUV --QP=$QP --FramesToBeEncoded=$FramesToBeEncoded --MaxCUSize=$MaxCUSize --MaxPartitionDepth=$MaxPartitionDepth --QuadtreeTULog2MaxSize=4 --BitstreamFile="../vid/HMEncodedVideo.bin" |& tee -a encoder.log
+fi
+
+file_size=`du -b "../vid/HMEncodedVideo.bin" | cut -f1`
+echo "File Size (.bin) = "$file_size" Bytes" >> $HMSResults
+echo "" >> $HMSResults
+
+rm -rf "../vid/HMDecodedVideo_Stitching.yuv"
+rm -rf decoder.log
+
+if [ $mode = "stitching" ]
+then
+./HMS/bin/TAppDecoderStatic --BitstreamFile="../vid/HMEncodedVideo.bin" --ReconFile="../vid/HMDecodedVideo_Stitching.yuv" |& tee -a decoder.log
+else
+./HM_Original/bin/TAppDecoderStatic --BitstreamFile="../vid/HMEncodedVideo.bin" --ReconFile="../vid/HMDecodedVideo_Stitching.yuv" |& tee -a decoder.log
+fi
+
+python ./Quality/measure.py  $InputYUV ../vid/HMDecodedVideo_Stitching.yuv 320 240 >> $HMSResults 
+
+## Parsing the Number of frames, size of bitstream, and size of motion info from the $JMFrameStatsOrigFileName
+NumFrame=0
+Size_Frame_Total=0;
+while IFS=$'\t' read -r HMSLine
+do
+ # printf 'f1: %s\n' "$HMSLine"
+  IFS='| ' read -r -a HMSLine_array1 <<< "$HMSLine"
+  if [[ "${HMSLine_array1[0]}" == *"POC"* ]]
+  then
+    NumFrame=$(echo ${HMSLine_array1[1]} | tr -d ' ')
+  fi
+
+  IFS=' :()' read -r -a HMSLine_array2 <<< "$HMSLine"
+  if [[ "${HMSLine_array2[1]}" == *"written"* ]]
+  then
+    WrittenBytes=$(echo ${HMSLine_array2[4]} | tr -d ' ')
+    BitRate=$(echo ${HMSLine_array2[5]} | tr -d ' ')
+  fi
+done < <(paste "./encoder.log")
+
+echo "" >> $HMSResults
+echo "Number of Frames = "$((NumFrame + 1)) >> $HMSResults
+echo "Number of written bytes = "$WrittenBytes >> $HMSResults
+echo "Bit Rate = "$BitRate" kbps" >> $HMSResults

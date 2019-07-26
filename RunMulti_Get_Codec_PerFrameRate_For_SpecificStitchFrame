@@ -1,0 +1,80 @@
+#!/bin/bash
+clear
+cd ..
+
+# must edit
+fid="HD_W352_H288_fps4_vid4_r2"
+QP=20
+MaxCUSize=16
+MaxPartitionDepth=2
+FramesToBeEncoded=2100
+FramesToBeStitched_start=30
+FramesToBeStitched_end=90
+fps=8
+path="../HMSResultsPerFrame/"
+W=320
+H=288
+rate=0
+opt=""
+#%%%%%
+N=5; 				#Number of Parallel Processes 
+#%%%%
+
+FramesToBeStitched_end=$((FramesToBeStitched_end-FramesToBeStitched_start+1))
+
+cp ./vid/$fid.yuv ./HMS/. &
+cp ./vid/$fid.mp4 ./HMS/. &
+wait
+cnt=$FramesToBeStitched_start;
+Inc=$((FramesToBeStitched/N));
+Inc2=$((FramesToBeStitched%N));
+if [ $Inc2 -gt 0 ];
+then
+echo "Number of Frames To Be Stitched % Number of Multiple Processes != 0"
+fi
+
+i=1;
+while [ $i -le $N ]
+do 
+if [ -e HMS$i ]
+then
+rm -rf HMS$i
+fi
+if [ -e HMS$i ]
+then
+echo "cann't remove HMSM$i to start a fresh coding, try to remove it and then run the code again"
+exit -1; 
+fi
+
+
+cp -r HMS HMS$i &
+i=$((i+1));
+done
+wait
+
+i=1
+while [ $i -le $N ]
+do
+if [ $i -eq $N ]
+then
+Inc=$((FramesToBeStitched + Index_stitch_frame - cnt));
+fi
+cd ./HMS$i
+echo $cnt $((cnt+Inc-1))
+./Get_Codec_PerFrameRate_For_RangeStitchFrames --first_stitch_frame=$cnt --last_stitch_frame=$((cnt+Inc-1)) --vid=$fid --qp=$QP --mcu=$MaxCUSize --mpd=$MaxPartitionDepth --nf=$FramesToBeEncoded --fps=$fps --output_dir=$output_dir --h=$H --w=$W --Rate=$rate --output_dir=$path &
+
+cnt=$((cnt+Inc));
+i=$((i+1));
+cd ..
+done
+wait
+
+i=1;
+while [ $i -le $N ]
+do
+rm -rf HMS$i &
+i=$((i+1));
+done
+wait
+
+rm ./HMS/$fid.yuv

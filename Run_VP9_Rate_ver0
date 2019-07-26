@@ -1,0 +1,141 @@
+#!/bin/bash
+#clear
+fid="scene_level_sample_320240_1min"
+fps=30
+path="./HMSResults/"
+W=352
+H=288
+rate=10000
+opt=""
+
+for i in "$@"
+do
+case $i in
+    -vid=*|--vid=*)
+    fid="${i#*=}"
+    shift
+    ;;
+   -fps=*|--fps=*)
+    fps="${i#*=}"
+    shift
+    ;;
+   -output_dir=*|--output_dir=*)
+    path="${i#*=}"
+    shift
+    ;;
+   -H=*|--H=*|-h=*|--h=*)
+    H="${i#*=}"
+    shift
+    ;;
+   -W=*|--W=*|-w=*|--w=*)
+    W="${i#*=}"
+    shift
+    ;;
+    -rate=*|--rate=*|-Rate=*|--Rate=*)
+    rate="${i#*=}"
+    shift
+    ;;
+   -opt=*|--opt=*|-Opt=*|--Opt=*)
+    opt="${i#*=}"
+    shift
+    ;;
+    *)
+          # unknown option
+    ;;
+esac
+done
+#### End Parsing Command Line Parameters
+
+echo "================================================================================================"
+echo "Evaluate VP9 1-pass using target Bit Rate"
+echo "================================================================================================"
+
+if [[ ! -e "$path" ]]
+then
+mkdir $path
+echo $path
+fi
+
+#find . | xargs chmod 777
+
+if [[ $opt != "" ]]
+then
+opt="_"$opt
+fi
+
+HMSResults=$path"/"$fid"_VP9_rate"$rate"_fps"$fps"_"$opt".dat"
+echo $HMSResults
+
+InputYUV="../vid/"$fid".yuv"
+InputMP4="../vid/"$fid".mp4"
+
+
+rm $HMSResults
+echo "Input File (YUV) = "$InputYUV > $HMSResults
+echo "Input File (MP4) = "$InputMP4 >> $HMSResults
+echo "Rate = "$rate >> $HMSResults
+echo "fps = "$fps >> $HMSResults
+echo "" >> $HMSResults
+
+rm -rf "../vid/VP9EncodedVideo.webm"
+rm -rf encoder.log
+
+#ffmpeg -y -f rawvideo -pix_fmt yuv420p -s:v "$W"x"$H" -r "$fps" -i "$InputYUV" -c:v libvpx-vp9 -b:v "$rate" ../vid/VP9EncodedVideo.webm
+
+#VBR encoding
+#../libvpx/build/vpxenc -y $InputYUV -o ../vid/VP9EncodedVideo.webm --codec=vp9 --i420 -w $W -h $H -p 1 -t 4 --good --cpu-used=0 --target-bitrate=$rate --end-usage=vbr  --fps=$fps'000'/1000 -v --kf-min-dist=0 --kf-max-dist=360 --static-thresh=0  --min-q=0 --max-q=63
+#CBR encoding
+rate=$((rate / 1000)) 
+../libvpx/build/vpxenc -y $InputYUV -o ../vid/VP9EncodedVideo.webm --codec=vp9 --i420 -w $W -h $H -p 1 -t 4 --rt --cpu-used=4 --end-usage=cbr --target-bitrate=$rate --fps=$fps'000'/1000 --undershoot-pct=0 --buf-sz=6000 --buf-initial-sz=4000 --buf-optimal-sz=5000 -v --kf-max-dist=999999 --min-q=4 --max-q=56
+
+
+file_size=`du -b "../vid/VP9EncodedVideo.webm" | cut -f1`
+echo "File Size (.webm) = "$file_size" Bytes" >> $HMSResults
+echo "" >> $HMSResults
+
+rm -rf "../vid/VP9DecodedVideo.yuv"
+rm -rf decoder.log
+
+#ffmpeg -y -i ../vid/VP9EncodedVideo.webm ../vid/VP9DecodedVideo.yuv
+../libvpx/build/vpxdec ../vid/VP9EncodedVideo.webm --i420 -o ../vid/VP9DecodedVideo.yuv 
+
+echo "PSNR ........................"
+python ./Quality/measure.py  $InputYUV ../vid/VP9DecodedVideo.yuv $W $H >> $HMSResults 
+
+## getting vmaf score
+echo "VMAF ........................" 
+../vmaf/run_vmaf yuv420p $W $H $InputYUV ../vid/VP9DecodedVideo.yuv > $path/vmaf.out
+echo "VMAF Done"
+
+sed -i -e 's/^/VMAF_/' $path/vmaf.out
+cat $path/vmaf.out >> $HMSResults
+rm -rf $path/vmaf.out
+
+## Parsing the Number of frames, size of bitstream, and size of motion info from the $JMFrameStatsOrigFileName
+#NumFrame=0
+#Size_Frame_Total=0;
+#while IFS=$'\t' read -r HMSLine
+#do
+# # printf 'f1: %s\n' "$HMSLine"
+#  IFS='| ' read -r -a HMSLine_array1 <<< "$HMSLine"
+#  if [[ "${HMSLine_array1[0]}" == *"POC"* ]]
+#  then
+#    NumFrame=$(echo ${HMSLine_array1[1]} | tr -d ' ')
+#  fi
+
+#  IFS=' :()' read -r -a HMSLine_array2 <<< "$HMSLine"
+#  if [[ "${HMSLine_array2[1]}" == *"written"* ]]
+#  then
+#    WrittenBites=$(echo ${HMSLine_array2[4]} | tr -d ' ')
+#    BitRate=$(echo ${HMSLine_array2[5]} | tr -d ' ')
+#  fi
+#done < <(paste "./encoder.log")
+
+#echo "" >> $HMSResults
+#echo "Number of Frames = "$((NumFrame + 1)) >> $HMSResults
+#echo "Number of written bites = "$WrittenBites >> $HMSResults
+#echo "Bit Rate = "$BitRate" kbps" >> $HMSResults
+
+rm temp.txt
+mv $HMSResults temp.txt
+cat temp.txt encoder.log >> $HMSResults

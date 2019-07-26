@@ -1,0 +1,323 @@
+#!/bin/bash
+#clear
+
+# Set initial default parameters
+# must edit
+enc_cfg=encoder_Jubran.cfg	#HM encoder configuration file
+QP=30	 			#value [0 - 51]
+MaxCUSize=16			#Maximum CU size which plays a factor in setting the resolution of MVs
+MaxPartitionDepth=1		#Maximum parition depth which plays a factor in setting the resolution of the MVs
+SearchRange=16			#value [16,32,64]
+mbmapXxX=4			#value [8,16]
+SetType="train"			#value [0:Train Set,1: Test Set]
+TTSet=01			#UCF-101 Split Set [01 02 03]
+IndexFirstVideo=0		#Index of first video to be encoded [1,2, .... ]
+NumVideos=100			#Number of Video files to be encoded
+StrComment="A"			#Comment to be added at the end of the directory that will be made (if doesn't exist) to contain the output MVs
+Overwrite=0			#Overwrite any exisitng MV files in the directory
+
+## Parsing Command Line Parameters
+## cmd exmaple: ./Generate-Split-1 -ecfg=encoder.cfg -qp=25 -sr=16 -res=4 -settype=test sset=01 -ifvid=1 -nvid=5 -strcom=Opt1a
+for i in "$@"
+do
+case $i in
+    -ecfg=*|--ecfg=*)
+    enc_cfg="${i#*=}"
+    shift
+    ;;
+    -qp=*|--qp=*)
+    QP="${i#*=}"
+    QP="${i#*=}"
+    shift
+    ;;
+    -mcu=*|--mcu=*)
+    MaxCUSize="${i#*=}"
+    MaxCUSize="${i#*=}"
+    shift
+    ;;
+    -mpd=*|--mpd=*)
+    MaxPartitionDepth="${i#*=}"
+    MaxPartitionDepth="${i#*=}"
+    shift
+    ;;
+    -sr=*|--sr=*)
+    SearchRange="${i#*=}"
+    shift
+    ;;
+    -res=*|--res=*)
+    mbmapXxX="${i#*=}"
+    shift
+    ;;
+    -settype=*|--settype=*)
+    SetType="${i#*=}"
+    shift
+    ;;
+   -sset=*|--sset=*)
+    TTSet="${i#*=}"
+    shift
+    ;;
+    -ifvid=*|--ifvid=*)
+    IndexFirstVideo="${i#*=}"
+    shift
+    ;;
+    -nvid=*|--nvid=*)
+    NumVideos="${i#*=}"
+    shift
+    ;;
+   -ow=*|--ow=*)
+    Overwrite="${i#*=}"
+    shift
+    ;;
+   -strcom=*|--strcom=*)
+    StrComment="_${i#*=}"
+    shift
+    ;;
+    *)
+          # unknown option
+    ;;
+esac
+done
+#### End Parsing Command Line Parameters
+
+# Hardcoded Parameters
+NumFrame=300000
+IndexLastVideo=$((IndexFirstVideo + NumVideos - 1))
+#%%%%%%%%%% Read file list and identify the location of the video and the MV output file name
+if [ $SetType = "train" ] || [ $SetType = "Train" ];
+then
+SetType="train"
+InputFileList="../../ucfTrainTestlist/trainlist"$TTSet".txt"
+else if [ $SetType = "test" ] || [ $SetType = "Test" ];
+then
+SetType="test"
+InputFileList="../../ucfTrainTestlist/testlist"$TTSet".txt"
+else
+echo "$SetType is not recognized as set type. It must be train or test"
+exit 1
+fi
+fi
+
+IFS=$'\n' read -d '' -r -a Lines < $InputFileList  #Read the list of test/training video files
+
+if [ $IndexLastVideo -gt ${#Lines[@]} ]
+then
+IndexLastVideo=${#Lines[@]}
+fi
+TotalVideos=$((IndexLastVideo-IndexFirstVideo+1))
+
+#%%%%%%%%%% Hidder General Info
+echo %########################################################################################
+echo "HM config file=${enc_cfg}, QP=$QP, Max CU Size=$MaxCUSize, Max Partition Depth=$MaxPartitionDepth, Search Range=$SearchRange, MV Resolution=$mbmapXxX"
+echo "UCF-101 Split Set = $TTSet, Set type (train/test)=$SetType, Index of First Video = $IndexFirstVideo, Number of Videos = $TotalVideos"  
+echo %########################################################################################
+
+cnt1=$IndexFirstVideo;
+cnt2=1; #increment 
+while [ $cnt1 -le $IndexLastVideo ]
+do
+Line=${Lines[$cnt1]}
+
+Directory="${Line%/*}"
+FileName="${Line##*/}"
+FileNameP1="${FileName%.*}"
+FileNameP2="avi"
+AbsFileName=$Directory"/"$FileNameP1.$FileNameP2
+
+#%%%%%%%%%% Show Processing Progress to keep track
+PerCompleted1=$((100*(cnt1-IndexFirstVideo+1)/(IndexLastVideo-IndexFirstVideo+1)))
+PerCompleted2=$((100*(cnt1-IndexFirstVideo+1)%(IndexLastVideo-IndexFirstVideo+1)))
+echo "($StrComment, $SetType) processing video file number $cnt1  [$IndexFirstVideo - $IndexLastVideo] ($AbsFileName) ... $PerCompleted1.$PerCompleted2% completed .. $(date +"%d-%m-%y %T")"
+
+
+#%% check if the MV alreadyy made and stored
+if [[ ((($Overwrite -eq 1) || (($SetType = "train") && (! -e "../HMMV/HMMV_Train"$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment"/HMMV_$FileNameP1.bin"))) || (($Overwrite -eq 1) || (($SetType = "test") && (! -e "../HMMV/HMMV_Test"$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment"/HMMV_$FileNameP1.bin")))) ]] ; 
+then
+
+#%%%%%%%%%% Transcoding FileName from .avi to .yuv and store the output yuv file in ./vid/"
+cd HM_MVX_NoTexture/bin
+if [ ! -e "../../../../UCF-101/$AbsFileName" ] ; then
+echo "../../../../UCF-101/$AbsFileName" "doesn't exit"
+break
+fi
+
+rm ../vid/HMInputVideo.yuv
+ffmpeg -loglevel panic -i '../../../../UCF-101/'$AbsFileName -vcodec rawvideo -pix_fmt yuv420p '../vid/HMInputVideo.yuv' > /dev/null
+cp -f ../vid/HMInputVideo.yuv ../../HM_MVX/vid/ > /dev/null
+
+if [ ! -e "../vid/HMInputVideo.yuv" ] ; then
+echo "Problem with ffmpeg while converting $AbsFileName to yuv, ../vid/HMInputVideo.yuv is not generated"
+break
+fi
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%%%%%%%%%%%%%%%%% Encoding and Decoding using NoTexture HM %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%%%%%%%%%% Encoding FileName from .yuv to .265 using HM encoder"
+if [ ! -e "../cfg/$enc_cfg" ] ; then
+echo "../cfg/$enc_cfg" "doesn't exit"
+break
+fi
+
+rm ../vid/HMEncodedVideo.265
+#rm -rf ./FrameStats.dat
+rm -rf ./logNoTexture
+
+./TAppEncoderStatic -c ../cfg/$enc_cfg --InputFile="../vid/HMInputVideo.yuv" --QP=$QP --FramesToBeEncoded=$NumFrame --MaxCUSize=$MaxCUSize --MaxPartitionDepth=$MaxPartitionDepth --BitstreamFile="../vid/HMEncodedVideo.265" > logNoTexture #/dev/null
+
+if [ ! -e "../vid/HMEncodedVideo.265" ] ; then
+echo "Problem with encoding [$AbsFileName] yuv to 265, ../vid/HMEncodedVideo.265 is not generated"
+break
+fi
+
+SizeNoTexture=`ls -la ../vid/HMEncodedVideo.265` #% to display the size of file
+echo $AbsFileName > stats.dat
+echo $SizeNoTexture >> stats.dat
+
+#%%%%%%%%%% Decoding FileName from .265 to .yuv using HM decoder"
+rm mv.bin > /dev/null 2>&1
+rm ../vid/HMDecodedVideo.yuv > /dev/null 2>&1
+./TAppDecoderStatic --BitstreamFile="../vid/HMEncodedVideo.265" --ReconFile="../vid/HMDecodedVideo.yuv" >> logNoTexture #> /dev/null
+
+cat logNoTexture >> stats.dat
+
+if [ ! -e "../vid/HMDecodedVideo.yuv" ] ; then
+echo "Problem with decoding [$AbsFileName].265 to yuv, ../vid/HMDecodedVideo.yuv is not generated"
+break
+fi
+
+#%%%%%%%%%%%%%%%%% Encoding and Decoding using Original HM %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%%%%%%%%%%%% copying yuv video files and config files from NoTexture HM directory to Original HM directory %%%%%%%%%%%%%%%%%%
+rm ../../HM_MVX/vid/HMInputVideo.yuv
+cp -f ../vid/HMInputVideo.yuv ../../HM_MVX/vid/. > /dev/null
+if [ ! -e "../../HM_MVX/vid/HMInputVideo.yuv" ] ; then
+echo "Problem with copying the $AbsFileName yuv file from HM_MV_NoTexture directory to HM_MV directory, ../../HM_MVX/vid/HMInputVideo.yuv is not copied"
+break
+fi
+
+rm ../../HM_MVX/cfg/$enc_cfg
+cp -f ../cfg/$enc_cfg ../../HM_MVX/cfg/. > /dev/null
+if [ ! -e "../../HM_MVX/cfg/$enc_cfg" ] ; then
+echo "Copying $enc_cfg from HM_MV_NoTexture directory to HM_MV directory failed"
+break
+fi
+
+#%%%%%%%%%% Encoding FileName from .yuv to .265 using HM encoder"
+cd ../../HM_MVX/bin #% move to the Original HM Directory
+
+if [ ! -e "../cfg/$enc_cfg" ] ; then
+echo "../cfg/$enc_cfg" "doesn't exit"
+break
+fi
+
+rm ../vid/HMEncodedVideo.265 > /dev/null 2>&1
+#rm -rf ../FrameStats.dat
+rm -rf ./logOrig
+
+./TAppEncoderStatic -c ../cfg/$enc_cfg --InputFile="../vid/HMInputVideo.yuv" --QP=$QP --FramesToBeEncoded=$NumFrame --MaxCUSize=$MaxCUSize --MaxPartitionDepth=$MaxPartitionDepth --BitstreamFile="../vid/HMEncodedVideo.265" > logOrig #/dev/null
+
+if [ ! -e "../vid/HMEncodedVideo.265" ] ; then
+echo "Problem with encoding [$AbsFileName] yuv to 265, ../vid/HMEncodedVideo.265 is not generated"
+break
+fi
+
+SizeOrig=`ls -la ../vid/HMEncodedVideo.265`  #% to display the size of file
+echo $AbsFileName > stats.dat
+echo $SizeOrig >> stats.dat
+
+
+
+#%%%%%%%%%% Decoding FileName from .265 to .yuv using HM decoder"
+rm mv.bin > /dev/null 2>&1
+rm ../vid/HMDecodedVideo.yuv > /dev/null 2>&1
+
+./TAppDecoderStatic --BitstreamFile="../vid/HMEncodedVideo.265" --ReconFile="../vid/HMDecodedVideo.yuv" >> logOrig #> /dev/null
+
+cat logOrig >> stats.dat
+
+if [ ! -e "../vid/HMDecodedVideo.yuv" ] ; then
+echo "Problem with decoding [$AbsFileName].265 to yuv, ../vid/HMDecodedVideo.yuv is not generated"
+break
+fi
+
+cd ../../HM_MVX_NoTexture/bin #% moveing back to the Original HM Directory
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+#%%%%%%%%%% Mapping MV to Macroblocks (make grid) and make them in a format suitable as input to classifier (Training/Testing)"
+rm ../../mbmap/mv_dec.bin
+mv -f mv.bin ../../mbmap/mv_dec.bin
+cd ../../mbmap
+if [ $mbmapXxX -eq 8 ] || [ $mbmapXxX -eq 4 ];
+then
+./mbmap -h 240 -w 320 -$mbmapXxX -o HMMV_mbmap.bin mv_dec.bin > /dev/null
+else
+ ./mbmap -h 240 -w 320 -o HMMV_mbmap.bin mv_dec.bin > /dev/null
+fi
+
+if [ ! -e "./HMMV_mbmap.bin" ] ; then
+echo "Mapping MV to Macroblocks (Grid of MVs) for [$AbsFileName], ./HMMV_mbmap.bin is not generated"
+break
+fi
+
+#%%%%%%%%%% Check if directory exist otherwise make it, and then move the MV file to the directory after naming it appropriately"
+
+if ! [ -d ../../HMMV ]
+then
+mkdir ../../HMMV
+fi
+
+
+if [ $SetType = "train" ]
+then
+ if ! [ -d ../../HMMV/HMMV_Train$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment ]
+ then
+ mkdir ../../HMMV/HMMV_Train$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment
+ fi
+ 
+ if ! [ -d ../../HMMV/HMStats_NoTexture_Train$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment ]
+ then
+ mkdir ../../HMMV/HMStats_NoTexture_Train$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment
+ fi
+
+ if ! [ -d ../../HMMV/HMStats_OrigHM_Train$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment ]
+ then
+ mkdir ../../HMMV/HMStats_OrigHM_Train$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment
+ fi
+
+mv -f HMMV_mbmap.bin ../../HMMV/HMMV_Train$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment/HMMV_$FileNameP1.bin
+mv -f ../HM_MVX_NoTexture/bin/stats.dat ../../HMMV/HMStats_NoTexture_Train$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment/HMStats_$FileNameP1.dat
+#mv -f ../HM_MVX_NoTexture/bin/FrameStats.dat ../../HMMV/HMStats_NoTexture_Train$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment/HMFrameStats_$FileNameP1.dat
+mv -f ../HM_MVX/bin/stats.dat ../../HMMV/HMStats_OrigHM_Train$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment/HMStats_$FileNameP1.dat
+#mv -f ../HM_MVX/bin/FrameStats.dat ../../HMMV/HMStats_OrigHM_Train$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment/HMFrameStats_$FileNameP1.dat
+
+else
+
+ if ! [ -d ../../HMMV/HMMV_Test$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment ]
+ then
+ mkdir ../../HMMV/HMMV_Test$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment 
+ fi
+ 
+ if ! [ -d ../../HMMV/HMStats_NoTexture_Test$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment ]
+ then
+ mkdir ../../HMMV/HMStats_NoTexture_Test$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment 
+ fi
+
+ if ! [ -d ../../HMMV/HMStats_OrigHM_Test$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment ]
+ then
+ mkdir ../../HMMV/HMStats_OrigHM_Test$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment
+ fi
+
+
+mv -f HMMV_mbmap.bin ../../HMMV/HMMV_Test$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment/HMMV_$FileNameP1.bin
+mv -f ../HM_MVX_NoTexture/bin/stats.dat ../../HMMV/HMStats_NoTexture_Test$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment/HMStats_$FileNameP1.dat
+#mv -f ../HM_MVX_NoTexture/bin/FrameStats.dat ../../HMMV/HMStats_NoTexture_Test$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment/HMFrameStats_$FileNameP1.dat
+mv -f ../HM_MVX/bin/stats.dat ../../HMMV/HMStats_OrigHM_Test$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment/HMStats_$FileNameP1.dat
+#mv -f ../HM_MVX/bin/FrameStats.dat ../../HMMV/HMStats_OrigHM_Test$TTSet"_QP"$QP"_MCU"$MaxCUSize"_MDepth"$MaxPartitionDepth"_MVSR"$SearchRange"_MVRes"$mbmapXxX$StrComment/HMFrameStats_$FileNameP1.dat
+
+fi
+
+cd ..
+
+fi # end check if the files already exists
+cnt1=$((cnt1 + cnt2))
+done < "$InputFileList"   #until end of FileNameList or NumVideos
+

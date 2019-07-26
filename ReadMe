@@ -1,0 +1,2 @@
+#To get  list of stitch frames
+python extended_term_frame_referencing.py --f=./SV_LowQuality/SV1.mp4 --fps=24 --gp=0 --wd=1 --wpp=1 --suffix='test' --maxf=40 --maxn=5

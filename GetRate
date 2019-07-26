@@ -1,0 +1,10 @@
+#!/bin/bash
+#clear
+IFS='_' read -ra ADDR <<< "$1"
+for i in "${ADDR[@]}"; do
+  if [[ $i == *"rate"* ]]; then
+  echo $i
+fi
+done
+#python Compare_Plan_V9_Rate_PSNR_VMAF_NoPlot_v1.py --fn1=$f1 --fps=24 --nf=0
+

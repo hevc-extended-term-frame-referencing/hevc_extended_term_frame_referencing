@@ -1,0 +1,58 @@
+#!/bin/bash
+#clear
+
+
+
+
+qp=0
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_182frames" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_182frames.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=0 --fps=30 --fsr=1 --nf=300000 --mode=normal --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_182frames" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_182frames.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=0 --fps=30 --fsr=30 --nf=300000 --mode=stitching --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_182frames" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_182frames.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=4 --fps=30 --fsr=30 --nf=300000 --mode=stitching --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_182frames" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_182frames.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=6 --fps=30 --fsr=30 --nf=300000 --mode=stitching --output_dir="./HMSResults"
+
+
+#python frame_level_run.py ../vid/SampleVideoStitch_ffmpeg_concat_511frames_d30_6.mp4
+#mv "./OrderedFrames.txt" "./OrderedFrames_SampleVideoStitch_ffmpeg_concat_511frames.txt"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_511frames_d30_6" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_511frames_d30_6.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=0 --fps=30 --fsr=1 --nf=300000 --mode=normal --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_511frames_d30_6" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_511frames_d30_6.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=4 --fps=30 --fsr=30 --nf=300000 --mode=stitching --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_511frames_d30_6" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_511frames_d30_6.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=6 --fps=30 --fsr=30 --nf=300000 --mode=stitching --output_dir="./HMSResults"
+
+qp=12
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_182frames" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_182frames.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=0 --fps=30 --fsr=1 --nf=300000 --mode=normal --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_182frames" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_182frames.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=0 --fps=30 --fsr=30 --nf=300000 --mode=stitching --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_182frames" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_182frames.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=4 --fps=30 --fsr=30 --nf=300000 --mode=stitching --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_182frames" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_182frames.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=6 --fps=30 --fsr=30 --nf=300000 --mode=stitching --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_511frames_d30_6" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_511frames_d30_6.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=0 --fps=30 --fsr=1 --nf=300000 --mode=normal --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_511frames_d30_6" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_511frames_d30_6.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=4 --fps=30 --fsr=30 --nf=300000 --mode=stitching --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_511frames_d30_6" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_511frames_d30_6.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=6 --fps=30 --fsr=30 --nf=300000 --mode=stitching --output_dir="./HMSResults"
+
+qp=24
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_182frames" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_182frames.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=0 --fps=30 --fsr=1 --nf=300000 --mode=normal --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_182frames" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_182frames.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=0 --fps=30 --fsr=30 --nf=300000 --mode=stitching --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_182frames" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_182frames.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=4 --fps=30 --fsr=30 --nf=300000 --mode=stitching --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_182frames" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_182frames.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=6 --fps=30 --fsr=30 --nf=300000 --mode=stitching --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_511frames_d30_6" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_511frames_d30_6.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=0 --fps=30 --fsr=1 --nf=300000 --mode=normal --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_511frames_d30_6" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_511frames_d30_6.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=4 --fps=30 --fsr=30 --nf=300000 --mode=stitching --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_ffmpeg_concat_511frames_d30_6" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_ffmpeg_concat_511frames_d30_6.txt" --qp=$qp --mcu=16 --mpd=2 --refa=8 --refs=6 --fps=30 --fsr=30 --nf=300000 --mode=stitching --output_dir="./HMSResults"
+

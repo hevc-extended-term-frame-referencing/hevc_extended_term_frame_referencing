@@ -1,0 +1,49 @@
+#!/bin/bash
+#clear
+./Run_HMS_Hold --vid="SampleVideoStitch_900frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_900frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=8 --refs=0 --fps=30 --fsr=6 --nf=300000 --mode=normal --output_dir="./HMSResults"
+
+./Run_HMS_Hold_Reverse --vid="SampleVideoStitch_900frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_900frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=8 --refs=0 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResultsReverse"
+
+./Run_HMS_Hold_Reverse --vid="SampleVideoStitch_900frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_900frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=8 --refs=2 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResultsReverse"
+
+./Run_HMS_Hold_Reverse --vid="SampleVideoStitch_900frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_900frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=8 --refs=4 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResultsReverse"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_900frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_900frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=8 --refs=0 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_900frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_900frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=8 --refs=2 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_900frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_900frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=8 --refs=4 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResults"
+
+### 1800 ... ref=8
+
+./Run_HMS_Hold --vid="SampleVideoStitch_1800frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_1800frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=8 --refs=0 --fps=30 --fsr=6 --nf=300000 --mode=normal --output_dir="./HMSResults"
+
+./Run_HMS_Hold_Reverse --vid="SampleVideoStitch_1800frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_1800frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=8 --refs=0 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResultsReverse"
+
+./Run_HMS_Hold_Reverse --vid="SampleVideoStitch_1800frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_1800frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=8 --refs=2 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResultsReverse"
+
+./Run_HMS_Hold_Reverse --vid="SampleVideoStitch_1800frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_1800frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=8 --refs=4 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResultsReverse"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_1800frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_1800frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=8 --refs=0 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_1800frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_1800frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=8 --refs=2 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_1800frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_1800frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=8 --refs=4 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResults"
+
+### 1800 ... ref=16
+
+./Run_HMS_Hold_Reverse --vid="SampleVideoStitch_1800frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_1800frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=16 --refs=0 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResultsReverse"
+
+./Run_HMS_Hold_Reverse --vid="SampleVideoStitch_1800frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_1800frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=16 --refs=4 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResultsReverse"
+
+./Run_HMS_Hold_Reverse --vid="SampleVideoStitch_1800frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_1800frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=16 --refs=8 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResultsReverse"
+
+./Run_HMS_Hold_Reverse --vid="SampleVideoStitch_1800frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_1800frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=16 --refs=12 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResultsReverse"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_1800frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_1800frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=16 --refs=0 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_1800frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_1800frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=16 --refs=4 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_1800frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_1800frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=16 --refs=8 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResults"
+
+./Run_HMS_Hold --vid="SampleVideoStitch_1800frames_352288_r1_2_Trans" --W=352 --H=288 --rlist="./OrderedFrames_SampleVideoStitch_1800frames_352288_r1_2_d30_6.txt" --qp=24 --mcu=16 --mpd=2 --refa=16 --refs=12 --fps=30 --fsr=6 --nf=300000 --mode=stitch --output_dir="./HMSResults"
