@@ -1,2 +1,16 @@
 #To get  list of stitch frames
-python extended_term_frame_referencing.py --f=./SV_LowQuality/SV1.mp4 --fps=24 --gp=0 --wd=1 --wpp=1 --suffix='test' --maxf=40 --maxn=5
+
+extended_term_frame_referencing.py: produce a list of sitching frames saved to a text file [OrderedFrames.txt]
+
+example:
+python extended_term_frame_referencing.py --f=./SV_LowQuality/SV1.mp4 --fps=24 --gp=0 --wd=1 --wpp=1 --suffix='test' --maxf=400 --maxn=5
+
+Options
+--f		input file name 
+--fps		frame per second
+--gp		minimum distance (number of frames) between two stitching frames
+--wd		weight of dissimilarity score
+--wpp		weight of popularity score
+--maxf		number of original video frames to be considered for stitching frames [maxf=0; consider all of frames in the input video]
+--maxn		number of stitch frames [maxn=0; number of stitch frames equals the number of scnene cuts]
+--suffix	text to be appended to the output file name
