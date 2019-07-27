@@ -12,7 +12,7 @@ In order to compile and run the tools provided in this repository you will need:
 3. opencv
 
 ## Sequence-Level Reference Frames
-To produce a list of sequence-level reference frames based on the method described in our paper:
+To produce a list of sequence-level reference frames based on the algorithm described in our paper run
 
 ```
 python sequence_level_reference_frames.py --f=./SV_LowQuality/SV1.mp4 --fps=24 --gp=0 --wd=1 --wpp=1 --suffix='test' --maxf=400 --maxn=5
@@ -31,7 +31,7 @@ Option | Description
 
 
 ## Generate encoder configuration file
-To produce an encoder sequenc-level configuration file which containg the coding structure of all frmes in the sequence
+In order to produce an encoder sequenc-level configuration file which contains the coding structure use
 
 ```
 python cfg_hevc_sequence_level_reference_frames.py --slist=./OrderedFrames.txt --gop=1200 --active=20 --stitch=16
@@ -44,13 +44,16 @@ Parameters | Description [example]
 --active | number of reference frames inclduing short-term and long-term refernce frames [20]
 --stitch | number of long-term refernce frames (stitching reference frames) [16]
 
-## Encoding a video using HEVC reference software (HM) with  sequence-level refernce frames
+## Encoding using HEVC reference software (HM) with sequence-level reference frames
+To compress a video using our method, include the sequenc-level configuration file [encoder_HMS_sequence_level_GOP.cfg] in the HM encoder command line.
 
 ```
 ./HMS/bin/TAppEncoderStatic -c ./encoder_HMS.cfg -c ./encoder_HMS_sequence_level_GOP.cfg --InputFile=input.yuv --SourceWidth=640 --SourceHeight=480  --QP=30 --FrameRate=24 --FramesToBeEncoded=120 --MaxCUSize=64 --MaxPartitionDepth=4 --QuadtreeTULog2MaxSize=4 --BitstreamFile=stream.bin --RateControl=1 --TargetBitrate=100000
 ```
 
-## Decoding a video using HEVC reference software (HM) with  sequence-level refernce frame
+## Decoding using HEVC reference software (HM)
+To decode the compressed video, use the HM decoder.
+
 ```
 ./HMS/bin/TAppDecoderStatic --BitstreamFile=stream.bin --ReconFile=./input_recon.yuv
 ```
