@@ -130,7 +130,8 @@ python cfg_hevc_sequence_level_reference_frames.py --c=sequence_level.cfg
 
 
 ## Encoding a video using HEVC reference software (HM) with  sequence-level refernce frame
-./HMS/bin/TAppEncoderStatic -c ./encoder_HMS.cfg -c ./encoder_HMS_sequence_level_GOP.cfg --InputFile=./SV_LowQuality/SV1_Short.yuv --SourceWidth=640 --SourceHeight=480  --QP=30 --FrameRate=24 
---FramesToBeEncoded=120 --MaxCUSize=64 --MaxPartitionDepth=4 --QuadtreeTULog2MaxSize=4 --BitstreamFile="./HMEncodedVideo.bin" --RateControl=1 --TargetBitrate=1000
+./HMS/bin/TAppEncoderStatic -c ./encoder_HMS.cfg -c ./encoder_HMS_sequence_level_GOP.cfg --InputFile=input.yuv --SourceWidth=640 --SourceHeight=480  --QP=30 --FrameRate=24 
+--FramesToBeEncoded=120 --MaxCUSize=64 --MaxPartitionDepth=4 --QuadtreeTULog2MaxSize=4 --BitstreamFile=stream.bin --RateControl=1 --TargetBitrate=100000
 
 ## Decoding a video using HEVC reference software (HM) with  sequence-level refernce frame
+./HMS/bin/TAppDecoderStatic --BitstreamFile=stream.bin --ReconFile=./input_recon.yuv
