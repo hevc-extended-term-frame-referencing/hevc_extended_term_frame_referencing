@@ -224,23 +224,23 @@ if __name__ == "__main__":
     num_ref_pics_active_Stitching=int(args.num_ref_pics_active_stitching);
     vid=args.vid;
 
-    mode=args.mode;
-    fps=int(args.fps);
+#    mode=args.mode;
+#    fps=int(args.fps);
     GOP=int(args.gop);
-    Width=int(args.w);
-    Hight=int(args.h);
-    QP=int(args.qp);
-    MaxCUSize=int(args.maxcusize);
-    MaxPartitionDepth=int(args.maxpartitiondepth);
-    RateControl=int(args.ratecontrol);
-    rate=int(args.rate);
-    NProcesses=int(args.nprocesses);
-    Combined_encoder_log=args.combined_encoder_log
-    Split_video_path=args.split_video_path;
+#    Width=int(args.w);
+#    Hight=int(args.h);
+#    QP=int(args.qp);
+#    MaxCUSize=int(args.maxcusize);
+#    MaxPartitionDepth=int(args.maxpartitiondepth);
+#    RateControl=int(args.ratecontrol);
+#    rate=int(args.rate);
+#    NProcesses=int(args.nprocesses);
+#    Combined_encoder_log=args.combined_encoder_log
+#    Split_video_path=args.split_video_path;
 
 
     
-    fsr=fps
+#    fsr=fps
 
     if GOP%2!=0:
         GOP=int(GOP/2) * 2
