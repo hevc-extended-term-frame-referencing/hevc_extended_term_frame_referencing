@@ -1,14 +1,61 @@
-# Rate-Accuracy Trade-Off In Video Classification With Deep Convolutional Neural Networks
+# Sequence-Level Reference Frames In Video Coding
 
 ## Introduction
 
-This repository contains our public tools for producing cropped AVC and HEVC bitstreams to extract the sparse optical flow approximations  described in our paper.
+This repository contains our public tools for compressing videos based on HEVC refernce software with extended long-term prediction using sequence-level refernce frames
 
 ## Prerequisites
 
 In order to compile and run the tools provided in this repository you will need:
 1. Python 2.7 
 2. ffmpeg (version 2.8.15 or higher)
+3. opencv
+
+## To generate a list of sequence level reference frames
+python sequence_level_reference_frames.py: produce a list of sitching frames saved to a text file [OrderedFrames.txt]
+
+example:
+python sequence_level_reference_frames.py --f=./SV_LowQuality/SV1.mp4 --fps=24 --gp=0 --wd=1 --wpp=1 --suffix='test' --maxf=400 --maxn=5
+
+Option | Description
+---|---
+--f | input file name 
+--fps | frame per second
+--gp | minimum distance (number of frames) between two stitching frames
+--wd | weight of dissimilarity score
+--wpp | weight of popularity score
+--maxf | number of original video frames to be considered for stitching frames [maxf=0; consider all of frames in the input video]
+--maxn | number of stitch frames [maxn=0; number of stitch frames equals the number of scnene cuts]
+--suffix | text to be appended to the output file name
+
+## Edit the sequence level configuration file [sequence_level.cfg]
+Parametters | Description [example]
+---|---
+RankListFile | text file containing the list of sequence-level frames produced sequence_level_reference_frames.py [Orderedlist.txt]
+GOP | size of the GOP, must be the full length of the video [1200]
+num_ref_pics_active_Max | maximum number of reference frames which includes the short-term and long-term refernce frames (stitching reference frames) [12]
+num_ref_pics_active_Stitching | maximum number of long-term refernce fframes (stitching reference frames) [4]
+vid | input video [SV1.mp4]
+W | width of the YUV video [640]
+H | height of the YUV video
+QP | initial QP
+fps |  frames per second [30]
+MaxCUSiz | maximum coding unit size [64]
+MaxPartitionDepth | maximum partition depth [4]
+RateControl | enable rate control [1]
+Rate | target bitrate [1000000]
+NoBFrames | number of Bidirection frames [0]
+
+## To create an encoder sequenc-level configuration file [encoding structure of a GOP]
+python cfg_hevc_sequence_level_reference_frames.py --c=sequence_level.cfg
+
+
+## Encoding a video using HEVC reference software (HM) with  sequence-level refernce frame
+./HMS/bin/TAppEncoderStatic -c ./encoder_HMS.cfg -c ./encoder_HMS_sequence_level_GOP.cfg --InputFile=input.yuv --SourceWidth=640 --SourceHeight=480  --QP=30 --FrameRate=24 
+--FramesToBeEncoded=120 --MaxCUSize=64 --MaxPartitionDepth=4 --QuadtreeTULog2MaxSize=4 --BitstreamFile=stream.bin --RateControl=1 --TargetBitrate=100000
+
+## Decoding a video using HEVC reference software (HM) with  sequence-level refernce frame
+./HMS/bin/TAppDecoderStatic --BitstreamFile=stream.bin --ReconFile=./input_recon.yuv
 
 ## Cropped AVC/H.264 Bitstream and Optical Flow Approximation (MVs)
 To produce AVC/H.264 cropped bitstreams and their corresponding approximated optical flow run:
