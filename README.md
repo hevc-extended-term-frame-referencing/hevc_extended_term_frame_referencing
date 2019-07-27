@@ -29,12 +29,18 @@ Option | Description
 --maxn | number of stitch frames [maxn=0; number of stitch frames equals the number of scene cuts]
 --suffix | text to be appended to the output file name
 
+A successful run will produce an OrderedFrames.txt file which includes a list of stitch frames ordered based on popularity and dissimilarity scores.
 
 ## Generate encoder configuration file
 In order to produce an encoder sequenc-level configuration file which contains the coding structure of all frames within a GOP run
 
 ```
 python cfg_hevc_sequence_level_reference_frames.py --slist=./OrderedFrames.txt --gop=1200 --active=20 --stitch=16
+```
+A successfull run wil produce an encoder_HMS_sequence_level_GOP.txt file which includes a header and a coding structure of all frames in the GOP such as:
+
+```
+fff
 ```
 
 Parameters | Description [example]
