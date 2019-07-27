@@ -31,7 +31,7 @@ Option | Description
 
 A successful run will produce an OrderedFrames.txt file which includes a list of stitch frames ordered based on popularity and dissimilarity scores.
 
-## Generate encoder configuration file
+## Generate Encoder Sequence-Level Configuration File
 In order to produce an encoder sequenc-level configuration file which contains the coding structure of all frames within a GOP run
 
 ```
@@ -87,14 +87,14 @@ Frame29: P 29 0 -6.5 0.2590 0 0 1.0 0 0 0 4 4 -1 -2 -5 -22 2 0
 Frame30: P 30 0 -6.5 0.2590 0 0 1.0 0 0 0 4 4 -1 -2 -6 -23 2 0
 ```
 
-## Encoding using HEVC reference software (HM) with sequence-level reference frames
+## Encoding Using HEVC Reference Software (HM) with Sequence-Level Referencing
 To compress a video using our method, include the sequenc-level configuration file [encoder_HMS_sequence_level_GOP.cfg] in the HM encoder command line.
 
 ```
 ./HMS/bin/TAppEncoderStatic -c ./encoder_HMS.cfg -c ./encoder_HMS_sequence_level_GOP.cfg --InputFile=input.yuv --SourceWidth=640 --SourceHeight=480  --QP=30 --FrameRate=24 --FramesToBeEncoded=120 --MaxCUSize=64 --MaxPartitionDepth=4 --QuadtreeTULog2MaxSize=4 --BitstreamFile=stream.bin --RateControl=1 --TargetBitrate=100000
 ```
 
-## Decoding using HEVC reference software (HM)
+## Decoding Using HEVC Reference Software (HM)
 To decode the compressed video, use the HM decoder.
 
 ```
