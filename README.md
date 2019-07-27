@@ -37,11 +37,6 @@ In order to produce an encoder sequenc-level configuration file which contains t
 ```
 python cfg_hevc_sequence_level_reference_frames.py --slist=./OrderedFrames.txt --gop=1200 --active=20 --stitch=16
 ```
-A successfull run wil produce an encoder_HMS_sequence_level_GOP.txt file which includes a header and a coding structure of all frames in the GOP such as:
-
-```
-fff
-```
 
 Parameters | Description [example]
 ---|---
@@ -49,6 +44,12 @@ Parameters | Description [example]
 --gop | size of the GOP, must be the full length of the video [1200]
 --active | number of reference frames inclduing short-term and long-term refernce frames [20]
 --stitch | number of long-term refernce frames (stitching reference frames) [16]
+
+A successfull run wil produce an encoder_HMS_sequence_level_GOP.txt file which includes a header and a coding structure of all frames in the GOP such as:
+
+```
+fff
+```
 
 ## Encoding using HEVC reference software (HM) with sequence-level reference frames
 To compress a video using our method, include the sequenc-level configuration file [encoder_HMS_sequence_level_GOP.cfg] in the HM encoder command line.
