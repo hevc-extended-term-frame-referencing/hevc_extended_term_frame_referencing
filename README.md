@@ -31,7 +31,7 @@ Option | Description
 
 
 ## Generate encoder configuration file
-In order to produce an encoder sequenc-level configuration file which contains the coding structure use
+In order to produce an encoder sequenc-level configuration file which contains the coding structure of all frames within a GOP run
 
 ```
 python cfg_hevc_sequence_level_reference_frames.py --slist=./OrderedFrames.txt --gop=1200 --active=20 --stitch=16
