@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This repository contains our public tools for compressing videos based on HEVC refernce software with extended long-term prediction using sequence-level refernce frames
+This repository contains our public tools for compressing videos based on HEVC reference software with extended long-term prediction using sequence-level reference frames
 
 ## Prerequisites
 
@@ -26,40 +26,39 @@ Option | Description
 --wd | weight of dissimilarity score
 --wpp | weight of popularity score
 --maxf | number of original video frames to be considered for stitching frames [maxf=0; consider all of frames in the input video]
---maxn | number of stitch frames [maxn=0; number of stitch frames equals the number of scnene cuts]
+--maxn | number of stitch frames [maxn=0; number of stitch frames equals the number of scene cuts]
 --suffix | text to be appended to the output file name
 
 
-## Generate encoder sequence-level configuration file
+## Generate encoder configuration file
 To produce an encoder sequenc-level configuration file which containg the coding structure of all frmes in the sequence
 
 ```
 python cfg_hevc_sequence_level_reference_frames.py --c=sequence_level.cfg
 ```
 
-The parameters used in the sequence_level,cfg file.
+The parameters used in the sequence_level.cfg file.
 Parametters | Description [example]
 ---|---
-RankListFile | text file containing the list of sequence-level frames produced sequence_level_reference_frames.py [Orderedlist.txt]
+RankListFile | list of sequence-level refernce frames produced by sequence_level_reference_frames.py [Orderedlist.txt]
 GOP | size of the GOP, must be the full length of the video [1200]
-num_ref_pics_active_Max | maximum number of reference frames which includes the short-term and long-term refernce frames (stitching reference frames) [12]
-num_ref_pics_active_Stitching | maximum number of long-term refernce fframes (stitching reference frames) [4]
+num_ref_pics_active_Max | maximum number of reference frames inclduing short-term and long-term refernce frames [12]
+num_ref_pics_active_Stitching | maximum number of long-term refernce frames (stitching reference frames) [4]
 vid | input video [SV1.mp4]
 W | width of the YUV video [640]
 H | height of the YUV video
-QP | initial QP
+QP | initial quantization parameter
 fps |  frames per second [30]
-MaxCUSiz | maximum coding unit size [64]
+MaxCUSiz |  coding unit maximum size [64]
 MaxPartitionDepth | maximum partition depth [4]
 RateControl | enable rate control [1]
 Rate | target bitrate [1000000]
 NoBFrames | number of Bidirection frames [0]
 
-## Encoding a video using HEVC reference software (HM) with  sequence-level refernce frame
+## Encoding a video using HEVC reference software (HM) with  sequence-level refernce frames
 
 ```
-./HMS/bin/TAppEncoderStatic -c ./encoder_HMS.cfg -c ./encoder_HMS_sequence_level_GOP.cfg --InputFile=input.yuv --SourceWidth=640 --SourceHeight=480  --QP=30 --FrameRate=24 
---FramesToBeEncoded=120 --MaxCUSize=64 --MaxPartitionDepth=4 --QuadtreeTULog2MaxSize=4 --BitstreamFile=stream.bin --RateControl=1 --TargetBitrate=100000
+./HMS/bin/TAppEncoderStatic -c ./encoder_HMS.cfg -c ./encoder_HMS_sequence_level_GOP.cfg --InputFile=input.yuv --SourceWidth=640 --SourceHeight=480  --QP=30 --FrameRate=24 --FramesToBeEncoded=120 --MaxCUSize=64 --MaxPartitionDepth=4 --QuadtreeTULog2MaxSize=4 --BitstreamFile=stream.bin --RateControl=1 --TargetBitrate=100000
 ```
 
 ## Decoding a video using HEVC reference software (HM) with  sequence-level refernce frame
