@@ -56,3 +56,17 @@ python cfg_hevc_sequence_level_reference_frames.py --c=sequence_level.cfg
 
 ## Decoding a video using HEVC reference software (HM) with  sequence-level refernce frame
 ./HMS/bin/TAppDecoderStatic --BitstreamFile=stream.bin --ReconFile=./input_recon.yuv
+
+## LQ synthesized videos
+Due to limited available space, compressed version of synthesized videos used in our paper use provided in the directory SV_LowQuality
+
+## Links to natural videos
+The links below are for the naturla videos used in our paper
+Video | link
+---|---
+Breathe|
+City Lights|
+Brink|
+Naught List|
+Jet|
+Big Bunny|
