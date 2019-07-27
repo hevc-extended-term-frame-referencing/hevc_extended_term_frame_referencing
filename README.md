@@ -44,15 +44,6 @@ RankListFile | list of sequence-level refernce frames produced by sequence_level
 GOP | size of the GOP, must be the full length of the video [1200]
 num_ref_pics_active_Max | maximum number of reference frames inclduing short-term and long-term refernce frames [12]
 num_ref_pics_active_Stitching | maximum number of long-term refernce frames (stitching reference frames) [4]
-vid | input video [SV1.mp4]
-W | width of the YUV video [640]
-H | height of the YUV video
-QP | initial quantization parameter
-fps |  frames per second [30]
-MaxCUSiz |  coding unit maximum size [64]
-MaxPartitionDepth | maximum partition depth [4]
-RateControl | enable rate control [1]
-Rate | target bitrate [1000000]
 NoBFrames | number of Bidirection frames [0]
 
 ## Encoding a video using HEVC reference software (HM) with  sequence-level refernce frames
