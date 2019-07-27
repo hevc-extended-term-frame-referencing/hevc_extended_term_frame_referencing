@@ -127,10 +127,10 @@ def call_bg(cmd):
 ###--------------------------------------------------------------
 def Create_Encoder_Config(Distributed_GOP_Matrix,ref_pics_in_Distributed_GOP_Matrix):
     for Pcnt in range(np.shape(Distributed_GOP_Matrix)[0]):
-        if Pcnt==0:
-            print('GOP#{} [{} - {}]'.format(Pcnt,int(Distributed_GOP_Matrix[Pcnt][0]),int(Distributed_GOP_Matrix[Pcnt][np.shape(Distributed_GOP_Matrix)[1]-1])))
-        else:
-            print('GOP#{} [{} - {}]'.format(Pcnt,int((Distributed_GOP_Matrix[Pcnt-1][np.shape(Distributed_GOP_Matrix)[1]-1])+1),int(Distributed_GOP_Matrix[Pcnt][np.shape(Distributed_GOP_Matrix)[1]-1])))
+        #if Pcnt==0:
+        #    print('GOP#{} [{} - {}]'.format(Pcnt,int(Distributed_GOP_Matrix[Pcnt][0]),int(Distributed_GOP_Matrix[Pcnt][np.shape(Distributed_GOP_Matrix)[1]-1])))
+        #else:
+        #    print('GOP#{} [{} - {}]'.format(Pcnt,int((Distributed_GOP_Matrix[Pcnt-1][np.shape(Distributed_GOP_Matrix)[1]-1])+1),int(Distributed_GOP_Matrix[Pcnt][np.shape(Distributed_GOP_Matrix)[1]-1])))
     	Abs_ref_pics_Stitching_array_Distributed=ref_pics_active_Stitching[0:int(ref_pics_in_Distributed_GOP_Matrix[Pcnt])]
     	#num_ref_pics_active_Stitching_Distributed=len(Abs_ref_pics_Stitching_array_Distributed)
         num_ref_pics_active_Stitching_Distributed=len(ref_pics_active_Stitching)
@@ -222,21 +222,7 @@ if __name__ == "__main__":
     RankListFile=args.ranklistfile;
     num_ref_pics_active_Max=int(args.num_ref_pics_active_max);
     num_ref_pics_active_Stitching=int(args.num_ref_pics_active_stitching);
-    vid=args.vid;
-
-#    mode=args.mode;
-#    fps=int(args.fps);
     GOP=int(args.gop);
-#    Width=int(args.w);
-#    Hight=int(args.h);
-#    QP=int(args.qp);
-#    MaxCUSize=int(args.maxcusize);
-#    MaxPartitionDepth=int(args.maxpartitiondepth);
-#    RateControl=int(args.ratecontrol);
-#    rate=int(args.rate);
-#    NProcesses=int(args.nprocesses);
-#    Combined_encoder_log=args.combined_encoder_log
-#    Split_video_path=args.split_video_path;
 
 
     
