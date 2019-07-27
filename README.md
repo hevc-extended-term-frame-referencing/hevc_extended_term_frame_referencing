@@ -31,7 +31,7 @@ Option | Description
 
 A successful run will produce an OrderedFrames.txt file which includes a list of stitch frames ordered based on popularity and dissimilarity scores.
 
-## Generate Encoder Sequence-Level Configuration File
+## Generating Encoder Sequence-Level Configuration File
 In order to produce an encoder sequenc-level configuration file which contains the coding structure of all frames within a GOP run
 
 ```
@@ -104,14 +104,14 @@ To decode the compressed video, use the HM decoder.
 ## LQ Synthesized Videos
 Due to limited available space, compressed version of synthesized videos used in our paper use provided in the directory SV_LowQuality
 
-## Links to Natural Videos
+## Natural Videos
 The links below are for the naturla videos used in our paper
 
 Video | link
 ---|---
-Breathe | ...
-City Lights | ...
-Brink | ... 
-Naught List | ...
-Jet | ...
+Breathe | https://www.filmsshort.com/short-film-pages/breathe-james-doherty.html#.XTxfGugzZhE
+City Lights | https://www.filmsshort.com/short-film-pages/city-lights-ed-wiles.html#.XTxfRugzZhE
+Brink | https://www.filmsshort.com/short-film-pages/the-brink-ben-jendras.html#.XTxfE-gzZhE
+Naught List | https://www.filmsshort.com/short-film-pages/the-naughty-list-paul-campion.html#.XTxfm-gzZhE
+Jet | https://www.filmsshort.com/short-film-pages/jet-jordan-chesney.html#.XTxfX-gzZhE
 Big Bunny | ...
