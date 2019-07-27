@@ -1,0 +1,24 @@
+% insert your parameters here, the reserved flags are given in comments below and MUST be used
+% your chosen setting(s) for each parameter MUST follow its associated flag found below
+% do no leave empty lines between each reserved flag and associated value(s)
+
+% ffmpeg_bin - provide your ffmpeg binary filename here
+./ffmpeg
+
+
+% ffprobe_bin - provide your ffprobe binary filename here
+./ffprobe
+
+
+% threshold_scene - threshold for scene-cut detector
+0.2
+
+
+% max_chunks - total chunks to partition each video in
+3
+
+
+% profile_string - the following lines are the FFMPEG profile, each line must begin with ///prof/// 
+///prof/// -filter:v format=pix_fmts=yuv420p,scale=s=1280x720:flags=lanczos -c:v libx264 -aspect 16:9 -b:v 800k -preset slower -subq 9 -trellis 2 -tune ssim -ssim 1 -pass 1 -an -f mp4 -y
+///prof/// -filter:v format=pix_fmts=yuv420p,scale=s=1280x720:flags=lanczos -c:v libx264 -aspect 16:9 -b:v 800k -preset slower -subq 9 -trellis 2 -tune ssim -ssim 1 -pass 2 -filter:a pan=stereo:c0=c0:c1=c1 -c:a libfdk_aac -vbr 5 -cutoff 19000 -afterburner 1 -f mp4 -movflags +faststart -y
+

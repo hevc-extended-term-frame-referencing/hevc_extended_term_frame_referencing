@@ -1,0 +1,15 @@
+objects/NALwrite.d.o: \
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibEncoder/NALwrite.cpp \
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/NAL.h \
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/CommonDef.h \
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/TypeDef.h \
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/TComBitStream.h \
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibEncoder/NALwrite.h \
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/CommonDef.h
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibEncoder/NALwrite.cpp :
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/NAL.h :
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/CommonDef.h :
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/TypeDef.h :
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/TComBitStream.h :
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibEncoder/NALwrite.h :
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/CommonDef.h :

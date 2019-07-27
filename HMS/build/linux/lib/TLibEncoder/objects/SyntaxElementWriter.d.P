@@ -1,0 +1,15 @@
+objects/SyntaxElementWriter.d.o: \
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibEncoder/SyntaxElementWriter.cpp \
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/CommonDef.h \
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/TypeDef.h \
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibEncoder/SyntaxElementWriter.h \
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/TComBitStream.h \
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/CommonDef.h \
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/TComRom.h
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibEncoder/SyntaxElementWriter.cpp :
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/CommonDef.h :
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/TypeDef.h :
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibEncoder/SyntaxElementWriter.h :
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/TComBitStream.h :
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/CommonDef.h :
+ /u/Downloads/HMStitching/HMS/HMS/build/linux/lib/TLibEncoder/../../../../source/Lib/TLibCommon/TComRom.h :
