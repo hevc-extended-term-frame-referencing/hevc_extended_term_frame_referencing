@@ -34,17 +34,15 @@ Option | Description
 To produce an encoder sequenc-level configuration file which containg the coding structure of all frmes in the sequence
 
 ```
-python cfg_hevc_sequence_level_reference_frames.py --c=sequence_level.cfg
+python cfg_hevc_sequence_level_reference_frames.py --slist=./OrderedFrames.txt --gop=1200 --active=20 --stitch=16
 ```
-
-The parameters used in the sequence_level.cfg file.
 
 Parameters | Description [example]
 ---|---
-RankListFile | list of sequence-level refernce frames produced by sequence_level_reference_frames.py [Orderedlist.txt]
-GOP | size of the GOP, must be the full length of the video [1200]
-num_ref_pics_active_Max | maximum number of reference frames inclduing short-term and long-term refernce frames [12]
-num_ref_pics_active_Stitching | maximum number of long-term refernce frames (stitching reference frames) [4]
+--slist | list of sequence-level refernce frames produced by sequence_level_reference_frames.py [Orderedlist.txt]
+--gop | size of the GOP, must be the full length of the video [1200]
+--active | number of reference frames inclduing short-term and long-term refernce frames [20]
+--stitch | number of long-term refernce frames (stitching reference frames) [16]
 
 ## Encoding a video using HEVC reference software (HM) with  sequence-level refernce frames
 

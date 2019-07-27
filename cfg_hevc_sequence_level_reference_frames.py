@@ -10,6 +10,30 @@ import datetime, math, time
 
 INF = 999
 
+# Instantiate the parser
+parser = argparse.ArgumentParser(description='Optional app description')
+
+# Optional argument
+parser.add_argument('--gop', type=int,
+                    help='GOP size')
+
+parser.add_argument('--active', type=int,
+                    help='number of active reference frames')
+
+parser.add_argument('--stitch', type=int,
+                    help='number of stitching reference frames')
+
+parser.add_argument('--slist', type=str,
+                    help='list of sequence-level reference frames')
+
+args = parser.parse_args()
+
+RankListFile=args.slist;
+num_ref_pics_active_Max=int(args.active);
+num_ref_pics_active_Stitching=int(args.stitch);
+GOP=int(args.gop);
+
+'''
 ###--------------------------------------------------------------
 ## Parse configuration Parameters from the configuration file
 def main(argv=None):
@@ -49,7 +73,7 @@ def main(argv=None):
     parser.set_defaults(**defaults)   
     args = parser.parse_args(remaining_argv)
     return(args)
-
+'''
 ###--------------------------------------------------------------
 ## read frame numbers from Rank List File
 def read_ranklist():
@@ -216,13 +240,13 @@ def Create_Encoder_Config(Distributed_GOP_Matrix,ref_pics_in_Distributed_GOP_Mat
 ##################################################################
 ## Main Body
 if __name__ == "__main__":
-    args=main()
+#    args=main()
 
     ##Inputs
-    RankListFile=args.ranklistfile;
-    num_ref_pics_active_Max=int(args.num_ref_pics_active_max);
-    num_ref_pics_active_Stitching=int(args.num_ref_pics_active_stitching);
-    GOP=int(args.gop);
+    #RankListFile=args.ranklistfile;
+    #num_ref_pics_active_Max=int(args.num_ref_pics_active_max);
+    #num_ref_pics_active_Stitching=int(args.num_ref_pics_active_stitching);
+    #GOP=int(args.gop);
 
 
     
